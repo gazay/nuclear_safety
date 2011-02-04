@@ -1,0 +1,9 @@
+Very old sources of my diploma project for solving problem of nuclear safety. This script solves system of equations, which describes all elements of complex system. 
+
+
+Need to refactoring all code. It was lazy programming with variables the same as in equations. s - state, m - mass etc.
+
+TODO:
+1. Replace all variables with readable full names.
+2. Organize classes in right structure.
+3. Write full instructions in README
