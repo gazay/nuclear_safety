@@ -6,13 +6,10 @@ class State
   def initialize(name, element, is_initial=nil, previous_states=nil, possibles=nil)
     @name = name
     @element = element
-    @previous_states = Hash.new
-    @possibles = Hash.new
-    @events = Hash.new
-    @queue = Hash.new
+    @previous_states, @possibles, @events, @queue = {}, {}, {}, {}
     element.states[@name] = self 
     
-    @is_initial = is_initial unless is_initial.nil?
+    @is_initial = is_initial if is_initial
     
     unless previous_states.nil?
       previous_states.each do |pr|
@@ -25,7 +22,8 @@ class State
     unless possibles.nil?
       possibles.each do |p|
         @possible_states[p.name] = p
-        p.previous_states[@name] = self unless p.previous_states.has_key? @name
+        p.previous_states[@name] = 
+          self unless p.previous_states.has_key? @name
       end
     end
   end
@@ -36,20 +34,20 @@ class State
   end
   
   def previous_list
-    s = ''
+    output = ''
     previous_states.each_key do |ps|
-      s += ps + "\n"
+      output += ps + "\n"
     end
     
-    s
-  end
-  def possibles_list
-    s = ''
-    possibles.each_key do |pos|
-      s += pos + "\n"
-    end
-    
-    s
+    output
   end
   
+  def possibles_list
+    output = ''
+    possibles.each_key do |pos|
+      output += pos + "\n"
+    end
+    
+    output
+  end
 end

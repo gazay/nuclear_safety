@@ -1,8 +1,8 @@
-require 'classes/element.rb'
-require 'classes/state.rb'
-require 'classes/event.rb'
+require './classes/element.rb'
+require './classes/state.rb'
+require './classes/event.rb'
 
-read_file 'data/5elements.txt'
+read_file './data/5elements.txt'
 
 # path_to_state proc.elements['x2'].states['/x2']
 

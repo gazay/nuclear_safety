@@ -7,3 +7,7 @@ TODO:
 1. Replace all variables with readable full names.
 2. Organize classes in right structure.
 3. Write full instructions in README
+
+
+Work on ruby 1.8.7
+Doesn't work on ruby 1.9.2p0 (2010-08-18)

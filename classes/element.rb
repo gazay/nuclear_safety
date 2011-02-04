@@ -1,4 +1,4 @@
-require 'classes/processor.rb'
+require './classes/processor.rb'
 
 include Processor
 

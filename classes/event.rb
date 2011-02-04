@@ -3,10 +3,8 @@ class Event
   attr_accessor :general_condition, :second_condition
   
   def initialize(name, element, previous_state, target_state, general_condition=nil, second_condition=nil)
-    @name = name
-    @element = element
-    @previous_state = previous_state
-    @target_state = target_state
+    @name, @element = name, element
+    @previous_state, @target_state = previous_state, target_state
     @previous_state.events[@target_state.name + '(' + name + ')'] = self
     @target_state.events[@previous_state.name + '(' + name + ')'] = self
     if general_condition.nil?
