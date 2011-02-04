@@ -101,78 +101,83 @@ module Processor
     x_s = nil
     
     unless proc.elements.has_key? r
-      eval r + ' = Element.new \'' + r + '\'' 
-      eval r + 'w = State.new \'' + r + '\', ' + r + ', true'
+      new_eval r + ' = Element.new \'' + r + '\'' 
+      new_eval r + 'w = State.new \'' + r + '\', ' + r + ', true'
       x_s = r + 'w'
-      eval 'x = ' + x_s
+      new_eval 'x = ' + x_s
     else
-      eval r + ' = proc.elements[\'' + r + '\']'
+      new_eval r + ' = proc.elements[\'' + r + '\']'
     end
-    eval 'e = ' + r
-     
+    new_eval 'e = ' + r
+    
+    e = $common_binding.eval('e')
+    
     if line.match(/^\/x\d{1,2}h/)
-      eval r + 'h = State.new \'/' + r + 'h\', ' + r + ', false, ' + 
+      new_eval r + 'h = State.new \'/' + r + 'h\', ' + r + ', false, ' + 
         get_prev(line, e)
       x_s = r + 'h'
-      eval 'x = ' + x_s
+      new_eval 'x = ' + x_s
     elsif line.match(/^\/x\d{1,2}[ ]/)
-      eval r + 'b = State.new \'/' + r + '\', ' + r + ', false, ' + 
+      new_eval r + 'b = State.new \'/' + r + '\', ' + r + ', false, ' + 
         get_prev(line, e)
       x_s = r + 'b'
-      eval 'x = ' + x_s
+      new_eval 'x = ' + x_s
     elsif line.match(/^\/x\d{1,2}o/)
-      eval r + 'o = State.new \'/' + r + 'o\', ' + r + ', false, ' + 
+      new_eval r + 'o = State.new \'/' + r + 'o\', ' + r + ', false, ' + 
         get_prev(line, e)
       x_s = r + 'o'
-      eval 'x = ' + x_s
+      new_eval 'x = ' + x_s
     elsif line.match(/^\/x\d{1,2}a/)
-      eval r + 'a = State.new \'/' + r + 'a\', ' + r + ', false, ' + 
+      new_eval r + 'a = State.new \'/' + r + 'a\', ' + r + ', false, ' + 
         get_prev(line, e)
       x_s = r + 'a'
-      eval 'x = ' + x_s
+      new_eval 'x = ' + x_s
     end
+    
+    x = $common_binding.eval('x')
+    
     # p 'state = ' + x.name + ' :'
     # x.previous_states.each_key {|pr| p pr}
     line.scan(/w\d{1,2}[a-z]?\([^\)]+\)/) do |m|
       # p r + ' - ' + m
-      m.each do |w|
-        if w.match(/w\d{1,2}\(/)
-          gen_cond = w.match(/\(([^,]+)[,|\)]/)
+      # m.each do |w|
+        if m.match(/w\d{1,2}\(/)
+          gen_cond = m.match(/\(([^,]+)[,|\)]/)
           gen_cond = x.previous_states[gen_cond[1]]
           sec_cond = 'nil'
-          if w.match(/,[ ]?(.+)\)/)
-            sec_cond = w.match(/,[ ]?(.+)\)/)[1]
+          if m.match(/,[ ]?(.+)\)/)
+            sec_cond = m.match(/,[ ]?(.+)\)/)[1]
           end
           ev = nil
-          eval w.match(/^(.+)\(/)[1] + ' = Event.new \'' + w.match(/^(.+)\(/)[1] +
+          new_eval m.match(/^(.+)\(/)[1] + ' = Event.new \'' + m.match(/^(.+)\(/)[1] +
            '\', ' + r + ', gen_cond, ' + x_s + ', nil, \'' + sec_cond + '\''
-          eval 'ev = ' + w.match(/^(.+)\(/)[1]
+          new_eval 'ev = ' + m.match(/^(.+)\(/)[1]
           # p ev.name
-        elsif w.match(/w\d{1,2}[he]\(/)
-          gen_cond = w.match(/\(([^,]+)[,|\)]/)
+        elsif m.match(/w\d{1,2}[he]\(/)
+          gen_cond = m.match(/\(([^,]+)[,|\)]/)
           gen_cond = x.previous_states[gen_cond[1]]
           sec_cond = 'nil'
-          if w.match(/,[ ]?(.+)\)/)
-           sec_cond = w.match(/,[ ]?(.+)\)/)[1]
+          if m.match(/,[ ]?(.+)\)/)
+           sec_cond = m.match(/,[ ]?(.+)\)/)[1]
           end
           ev = nil
-          eval w.match(/^(.+)\(/)[1] + ' = Event.new \'' + w.match(/^(.+)\(/)[1] +
+          new_eval m.match(/^(.+)\(/)[1] + ' = Event.new \'' + m.match(/^(.+)\(/)[1] +
           '\', ' + r + ', gen_cond, ' + x_s + ', nil, \'' + sec_cond + '\''
-          eval 'ev = ' + w.match(/^(.+)\(/)[1]
+          new_eval 'ev = ' + m.match(/^(.+)\(/)[1]
           # p ev.name
-        elsif  w.match(/w\d{1,2}[oa]\(/)
-          gen_cond = w.match(/\(([^,]+)[,|\)]/)
+        elsif  m.match(/w\d{1,2}[oa]\(/)
+          gen_cond = m.match(/\(([^,]+)[,|\)]/)
           gen_cond = x.previous_states[gen_cond[1]]
           sec_cond = 'nil'
-          if w.match(/,[ ]?(.+)\)/)
-           sec_cond = w.match(/,[ ]?(.+)\)/)[1]
+          if m.match(/,[ ]?(.+)\)/)
+           sec_cond = m.match(/,[ ]?(.+)\)/)[1]
           end
           ev = nil
-          eval w.match(/^(.+)\(/)[1] + ' = Event.new \'' + w.match(/^(.+)\(/)[1] +
+          new_eval m.match(/^(.+)\(/)[1] + ' = Event.new \'' + m.match(/^(.+)\(/)[1] +
           '\', ' + r + ', gen_cond, ' + x_s + ', nil, \'' + sec_cond + '\''
-          eval 'ev = ' + w.match(/^(.+)\(/)[1]
+          new_eval 'ev = ' + m.match(/^(.+)\(/)[1]
           # p ev.name
-        end
+        # end
       end
     end
   end
@@ -231,12 +236,12 @@ module Processor
     cond = Array.new
     line.scan(/w\d{1,2}[a-z]?\([^\)]+\)/) do |m|
       # p r + ' - ' + m
-      m.each do |w|
-        c = element.states[w.match(/\(([^,]+)[,|\)]/)[1]].name
+      # m.each do |w|
+        c = element.states[m.match(/\(([^,]+)[,|\)]/)[1]].name
         # c = c + 'w' if c.match(/^x\d{1,2}$/) 
         # c = c[1..(c.length-1)] if c.match(/^\/x\d{1,2}h$/) 
         cond << c unless cond.include? c
-      end
+      # end
     end
     r = '['
     cond.each {|c| r += '\'' + c + '\','}
@@ -259,5 +264,10 @@ module Processor
   
   def proc
     Processor
+  end
+  
+  def new_eval(string)
+    $common_binding ||= binding
+    $common_binding = $common_binding.eval string + "; binding"    
   end
 end
